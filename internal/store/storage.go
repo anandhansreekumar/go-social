@@ -3,21 +3,32 @@ package store
 import (
 	"context"
 	"database/sql"
+	"errors"
+)
+
+var (
+	ErrNotFound = errors.New("resource not found")
 )
 
 type Storage struct {
 	Posts interface {
 		Create(ctx context.Context, post *Post) error
+		GetByID(ctx context.Context, id int64) (*Post, error)
 	}
 
 	Users interface {
 		Create(ctx context.Context, user *User) error
 	}
+
+	Comments interface {
+		GetByPostID(ctx context.Context, postID int64) ([]Comment, error)
+	}
 }
 
 func NewStorage(db *sql.DB) Storage {
 	return Storage{
-		Posts: newPostStore(db),
-		Users: newUserStore(db),
+		Posts:    newPostStore(db),
+		Users:    newUserStore(db),
+		Comments: newCommentStore(db),
 	}
 }

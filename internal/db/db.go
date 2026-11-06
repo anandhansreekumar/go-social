@@ -21,13 +21,18 @@ func New(addr string, maxOpenConns, maxIdleConns int, maxIdleTime string) (*sql.
 	db.SetMaxOpenConns(maxOpenConns)
 	db.SetMaxIdleConns(maxIdleConns)
 
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
-	defer cancel()
-
-	err = db.PingContext(ctx)
+	// Connectivity test
+	err = testDbConnectivity(db)
 	if err != nil {
 		return nil, err
 	}
 
 	return db, nil
+}
+
+func testDbConnectivity(db *sql.DB) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+
+	return db.PingContext(ctx)
 }
