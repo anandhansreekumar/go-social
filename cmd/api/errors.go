@@ -22,3 +22,9 @@ func (app *application) notFoundError(w http.ResponseWriter, r *http.Request, er
 
 	writeJSONError(w, http.StatusNotFound, "the requested resource could not be found")
 }
+
+func (app *application) editConflictError(w http.ResponseWriter, r *http.Request, err error) {
+	log.Printf("edit conflict error: %s path: %s error: %v", r.Method, r.URL.Path, err)
+
+	writeJSONError(w, http.StatusConflict, "unable to update the resource due to an edit conflict")
+}

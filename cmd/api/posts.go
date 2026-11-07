@@ -143,6 +143,8 @@ func (app *application) updatePostHandler(w http.ResponseWriter, r *http.Request
 		switch {
 		case errors.Is(err, store.ErrNotFound):
 			app.notFoundError(w, r, err)
+		case errors.Is(err, store.ErrEditConflict):
+			app.editConflictError(w, r, err)
 		default:
 			app.internalServerError(w, r, err)
 		}

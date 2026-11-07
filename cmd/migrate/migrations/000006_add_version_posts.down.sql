@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS posts DROP COLUMN version;
