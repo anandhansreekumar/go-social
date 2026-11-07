@@ -140,10 +140,10 @@ func (app *application) updatePostHandler(w http.ResponseWriter, r *http.Request
 	ctx := r.Context()
 
 	if err := app.store.Posts.Update(ctx, post); err != nil {
-		switch {
-		case errors.Is(err, store.ErrNotFound):
+		switch err {
+		case store.ErrNotFound:
 			app.notFoundError(w, r, err)
-		case errors.Is(err, store.ErrEditConflict):
+		case store.ErrEditConflict:
 			app.editConflictError(w, r, err)
 		default:
 			app.internalServerError(w, r, err)
